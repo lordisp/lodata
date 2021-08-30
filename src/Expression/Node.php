@@ -225,7 +225,7 @@ abstract class Node
                 foreach ($props as $prop) {
                     $value = $entity[$prop->getName()];
                     if ($value instanceof PropertyValue) {
-                        if (Str::contains($value->getPrimitiveValue()->get(), $this->getValue()->get())) {
+                        if (Str::contains($value->getPrimitiveValue(), $this->getValue()->get())) {
                             return Type\Boolean::true();
                         }
                     }
@@ -304,7 +304,7 @@ abstract class Node
             // Deserialization
             case $this instanceof Property:
                 $propertyValue = $entity[$this->getValue()];
-                return $propertyValue === null ? null : $propertyValue->getPrimitiveValue();
+                return $propertyValue === null ? null : $propertyValue->getPrimitive();
 
             case $this instanceof Literal:
                 return $this->getValue();

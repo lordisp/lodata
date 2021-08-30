@@ -215,7 +215,7 @@ class ComplexValue implements ArrayAccess, ArgumentInterface, Arrayable, JsonInt
 
         /** @var PropertyValue $propertyValue */
         foreach ($this->getPropertyValues() as $propertyValue) {
-            $result[$propertyValue->getProperty()->getName()] = $propertyValue->getPrimitiveValue()->get();
+            $result[$propertyValue->getProperty()->getName()] = $propertyValue->getPrimitiveValue();
         }
 
         return $result;

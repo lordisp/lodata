@@ -108,7 +108,7 @@ class FilesystemEntitySet extends EntitySet implements ReadInterface, CreateInte
      */
     public function getEntityIdPath(PropertyValue $key): string
     {
-        return $key->getPrimitiveValue()->get();
+        return $key->getPrimitiveValue();
     }
 
     /**
@@ -152,7 +152,7 @@ class FilesystemEntitySet extends EntitySet implements ReadInterface, CreateInte
 
         /** @var Filesystem $disk */
         $disk = $this->getDisk();
-        $path = $entity->getEntityId()->getPrimitiveValue()->get();
+        $path = $entity->getEntityId()->getPrimitiveValue();
 
         $contentProperty = $this->getType()->getProperty('content');
         $entity->addProperty(
