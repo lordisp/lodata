@@ -11,6 +11,7 @@ use Flat3\Lodata\Controller\Transaction;
 use Flat3\Lodata\Helper\Constants;
 use Flat3\Lodata\Helper\Identifier;
 use Flat3\Lodata\Helper\ObjectArray;
+use Flat3\Lodata\Helper\Properties;
 use Flat3\Lodata\Interfaces\AnnotationInterface;
 use Flat3\Lodata\Interfaces\ContextInterface;
 use Flat3\Lodata\Interfaces\IdentifierInterface;
@@ -42,7 +43,7 @@ class ComplexType extends Type implements ResourceInterface, ContextInterface, I
     public function __construct($identifier)
     {
         $this->setIdentifier($identifier);
-        $this->properties = new ObjectArray();
+        $this->properties = new Properties();
     }
 
     /**
