@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Flat3\Lodata\Drivers;
 
 use Flat3\Lodata\Entity;
-use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\PropertyValue;
+use Flat3\Lodata\Helper\PropertyValues;
 use Flat3\Lodata\Interfaces\EntitySet\CreateInterface;
 use Flat3\Lodata\Interfaces\EntitySet\DeleteInterface;
 use Flat3\Lodata\Interfaces\EntitySet\UpdateInterface;
@@ -41,10 +41,10 @@ class CollectionEntitySet extends EnumerableEntitySet implements CreateInterface
 
     /**
      * Create a new entity
-     * @param  PropertyValue[]|ObjectArray  $propertyValues
+     * @param  PropertyValues  $propertyValues
      * @return Entity
      */
-    public function create(ObjectArray $propertyValues): Entity
+    public function create(PropertyValues $propertyValues): Entity
     {
         $entity = $this->newEntity();
 

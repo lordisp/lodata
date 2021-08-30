@@ -21,6 +21,7 @@ use Flat3\Lodata\Exception\Protocol\BadRequestException;
 use Flat3\Lodata\Exception\Protocol\InternalServerErrorException;
 use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\PropertyValue;
+use Flat3\Lodata\Helper\PropertyValues;
 use Flat3\Lodata\Interfaces\EntitySet\CountInterface;
 use Flat3\Lodata\Interfaces\EntitySet\CreateInterface;
 use Flat3\Lodata\Interfaces\EntitySet\DeleteInterface;
@@ -362,10 +363,10 @@ class SQLEntitySet extends EntitySet implements CountInterface, CreateInterface,
 
     /**
      * Create a new record
-     * @param  PropertyValue[]|ObjectArray  $propertyValues  Property vakes
+     * @param  PropertyValues  $propertyValues  Property vakes
      * @return Entity Entity
      */
-    public function create(ObjectArray $propertyValues): Entity
+    public function create(PropertyValues $propertyValues): Entity
     {
         $fields = [];
 

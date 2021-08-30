@@ -10,8 +10,8 @@ use Flat3\Lodata\EntityType;
 use Flat3\Lodata\Exception\Protocol\BadRequestException;
 use Flat3\Lodata\Exception\Protocol\ConflictException;
 use Flat3\Lodata\Exception\Protocol\NotFoundException;
-use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\PropertyValue;
+use Flat3\Lodata\Helper\PropertyValues;
 use Flat3\Lodata\Interfaces\EntitySet\CreateInterface;
 use Flat3\Lodata\Interfaces\EntitySet\DeleteInterface;
 use Flat3\Lodata\Interfaces\EntitySet\QueryInterface;
@@ -69,10 +69,10 @@ class FilesystemEntitySet extends EntitySet implements ReadInterface, CreateInte
 
     /**
      * Create a filesystem entity
-     * @param  PropertyValue[]|ObjectArray  $propertyValues  Property values
+     * @param  PropertyValues  $propertyValues  Property values
      * @return Entity Entity
      */
-    public function create(ObjectArray $propertyValues): Entity
+    public function create(PropertyValues $propertyValues): Entity
     {
         $entity = $this->newEntity();
         $body = $this->transaction->getBody();

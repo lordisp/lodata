@@ -21,6 +21,7 @@ use Flat3\Lodata\Helper\Constants;
 use Flat3\Lodata\Helper\Gate;
 use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\PropertyValue;
+use Flat3\Lodata\Helper\PropertyValues;
 use Flat3\Lodata\Helper\Url;
 use Flat3\Lodata\Interfaces\AnnotationInterface;
 use Flat3\Lodata\Interfaces\ContextInterface;
@@ -332,11 +333,11 @@ abstract class EntitySet implements EntityTypeInterface, ReferenceInterface, Ide
     /**
      * Convert the provided PHP array to a set of property values for the entity type attached to this set
      * @param  array  $values  PHP values
-     * @return PropertyValue[]|ObjectArray Property value array
+     * @return PropertyValues Property value array
      */
-    public function arrayToPropertyValues(array $values): ObjectArray
+    public function arrayToPropertyValues(array $values): PropertyValues
     {
-        $propertyValues = new ObjectArray();
+        $propertyValues = new PropertyValues();
 
         foreach ($values as $key => $value) {
             $propertyValue = new PropertyValue();

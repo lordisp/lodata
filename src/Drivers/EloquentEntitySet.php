@@ -17,8 +17,8 @@ use Flat3\Lodata\EntitySet;
 use Flat3\Lodata\EntityType;
 use Flat3\Lodata\Exception\Protocol\InternalServerErrorException;
 use Flat3\Lodata\Facades\Lodata;
-use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\PropertyValue;
+use Flat3\Lodata\Helper\PropertyValues;
 use Flat3\Lodata\Interfaces\EntitySet\CountInterface;
 use Flat3\Lodata\Interfaces\EntitySet\CreateInterface;
 use Flat3\Lodata\Interfaces\EntitySet\DeleteInterface;
@@ -195,10 +195,10 @@ class EloquentEntitySet extends EntitySet implements CountInterface, CreateInter
 
     /**
      * Create an Eloquent model
-     * @param  PropertyValue[]|ObjectArray  $propertyValues  Property values
+     * @param  PropertyValues  $propertyValues  Property values
      * @return Entity Entity
      */
-    public function create(ObjectArray $propertyValues): Entity
+    public function create(PropertyValues $propertyValues): Entity
     {
         $model = $this->getModel();
 
