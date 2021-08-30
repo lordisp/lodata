@@ -82,7 +82,7 @@ class ComplexType extends Type implements ResourceInterface, ContextInterface, I
 
     /**
      * Create and add a declared property
-     * @param  mixed  $name  Property name
+     * @param  Identifier|string  $name  Property name
      * @param  Type  $type  Property type
      * @return $this
      */

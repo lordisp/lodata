@@ -8,6 +8,7 @@ use Flat3\Lodata\ComplexValue;
 use Flat3\Lodata\Controller\Response;
 use Flat3\Lodata\Controller\Transaction;
 use Flat3\Lodata\DeclaredProperty;
+use Flat3\Lodata\DynamicProperty;
 use Flat3\Lodata\Entity;
 use Flat3\Lodata\EntitySet;
 use Flat3\Lodata\Exception\Internal\LexerException;
@@ -441,7 +442,7 @@ class PropertyValue implements ContextInterface, PipeInterface, JsonInterface, R
             );
         }
 
-        if (!$this->getProperty() instanceof DeclaredProperty) {
+        if (!$this->getProperty() instanceof DeclaredProperty && !$this->getProperty() instanceof DynamicProperty) {
             throw new BadRequestException('property_not_updatable', 'This property cannot be updated');
         }
 
