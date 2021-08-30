@@ -19,7 +19,6 @@ use Flat3\Lodata\Expression\Lexer;
 use Flat3\Lodata\Facades\Lodata;
 use Flat3\Lodata\Helper\Constants;
 use Flat3\Lodata\Helper\Gate;
-use Flat3\Lodata\Helper\NavigationBindings;
 use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\Properties;
 use Flat3\Lodata\Helper\PropertyValue;
