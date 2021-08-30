@@ -52,7 +52,8 @@ class DynamicPropertyTest extends TestCase
         );
     }
 
-    public function test_update_dynamic_property() {
+    public function test_update_dynamic_property()
+    {
         $this->assertJsonResponse(
             Request::factory()
                 ->patch()

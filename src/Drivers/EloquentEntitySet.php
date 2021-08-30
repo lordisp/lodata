@@ -17,6 +17,7 @@ use Flat3\Lodata\EntitySet;
 use Flat3\Lodata\EntityType;
 use Flat3\Lodata\Exception\Protocol\InternalServerErrorException;
 use Flat3\Lodata\Facades\Lodata;
+use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\PropertyValue;
 use Flat3\Lodata\Interfaces\EntitySet\CountInterface;
 use Flat3\Lodata\Interfaces\EntitySet\CreateInterface;
@@ -194,22 +195,21 @@ class EloquentEntitySet extends EntitySet implements CountInterface, CreateInter
 
     /**
      * Create an Eloquent model
+     * @param  PropertyValue[]|ObjectArray  $propertyValues  Property values
      * @return Entity Entity
      */
-    public function create(): Entity
+    public function create(ObjectArray $propertyValues): Entity
     {
         $model = $this->getModel();
 
-        $body = $this->transaction->getBody();
-        $declaredProperties = $this->getType()->getDeclaredProperties()->pick(array_keys($body));
+        $declaredProperties = $this->getType()->getDeclaredProperties();
 
-        $entity = $this->newEntity()->fromArray($body);
-
-        /** @var DeclaredProperty $declaredProperty */
         foreach ($declaredProperties as $declaredProperty) {
-            if (array_key_exists($declaredProperty->getName(), $body)) {
-                $model[$declaredProperty->getName()] = $entity->getPropertyValue($declaredProperty)->get();
+            if (!$propertyValues->exists($declaredProperty)) {
+                continue;
             }
+
+            $model[$declaredProperty->getName()] = $propertyValues[$declaredProperty->getName()]->getPrimitiveValue();
         }
 
         if ($this->navigationPropertyValue) {

@@ -9,6 +9,7 @@ use Flat3\Lodata\EntitySet;
 use Flat3\Lodata\EntityType;
 use Flat3\Lodata\Exception\Protocol\BadRequestException;
 use Flat3\Lodata\Exception\Protocol\InternalServerErrorException;
+use Flat3\Lodata\Helper\ObjectArray;
 use Flat3\Lodata\Helper\PropertyValue;
 use Flat3\Lodata\Interfaces\EntitySet\CountInterface;
 use Flat3\Lodata\Interfaces\EntitySet\CreateInterface;
@@ -44,12 +45,16 @@ class RedisEntitySet extends EntitySet implements CreateInterface, UpdateInterfa
 
     /**
      * Create a new record
+     * @param  PropertyValue[]|ObjectArray  $propertyValues  Property values
      * @return Entity
      */
-    public function create(): Entity
+    public function create(ObjectArray $propertyValues): Entity
     {
         $entity = $this->newEntity();
-        $entity->fromSource($this->transaction->getBody());
+
+        foreach ($propertyValues as $propertyValue) {
+            $entity[$propertyValue->getProperty()->getName()] = $propertyValue->getValue();
+        }
 
         if (!$entity->getEntityId()) {
             throw new BadRequestException('missing_key', 'The required key must be provided to this entity set type');

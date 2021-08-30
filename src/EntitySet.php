@@ -307,7 +307,9 @@ abstract class EntitySet implements EntityTypeInterface, ReferenceInterface, Ide
                 $transaction->assertContentTypeJson();
                 $transaction->getResponse()->setStatusCode(Response::HTTP_CREATED);
 
-                $result = $this->create();
+                $propertyValues = $this->arrayToPropertyValues($this->transaction->getBody());
+
+                $result = $this->create($propertyValues);
 
                 if (
                     $transaction->getPreferenceValue(Constants::return) === Constants::minimal &&
@@ -325,6 +327,35 @@ abstract class EntitySet implements EntityTypeInterface, ReferenceInterface, Ide
         }
 
         throw new MethodNotAllowedException();
+    }
+
+    /**
+     * Convert the provided PHP array to a set of property values for the entity type attached to this set
+     * @param  array  $values  PHP values
+     * @return PropertyValue[]|ObjectArray Property value array
+     */
+    public function arrayToPropertyValues(array $values): ObjectArray
+    {
+        $propertyValues = new ObjectArray();
+
+        foreach ($values as $key => $value) {
+            $propertyValue = new PropertyValue();
+            $property = $this->getType()->getProperty($key);
+
+            if (Str::startsWith($key, ['$', '@'])) {
+                continue;
+            }
+
+            if (!$property) {
+                $property = new DynamicProperty($key, Type::castInternalType(gettype($value)));
+            }
+
+            $propertyValue->setProperty($property);
+            $propertyValue->setValue($property->getType()->instance($value));
+            $propertyValues[] = $propertyValue;
+        }
+
+        return $propertyValues;
     }
 
     /**
@@ -745,7 +776,9 @@ abstract class EntitySet implements EntityTypeInterface, ReferenceInterface, Ide
 
         Gate::check(Gate::create, $this, $transaction);
 
-        return $this->create();
+        $propertyValues = $this->arrayToPropertyValues($this->transaction->getBody());
+
+        return $this->create($propertyValues);
     }
 
     /**

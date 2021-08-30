@@ -362,24 +362,22 @@ class SQLEntitySet extends EntitySet implements CountInterface, CreateInterface,
 
     /**
      * Create a new record
+     * @param  PropertyValue[]|ObjectArray  $propertyValues  Property vakes
      * @return Entity Entity
      */
-    public function create(): Entity
+    public function create(ObjectArray $propertyValues): Entity
     {
-        $entity = $this->newEntity();
-        $body = $this->transaction->getBody();
-        $entity->fromArray($body);
-
-        $type = $this->getType();
-        $declaredProperties = $type->getDeclaredProperties()->pick(array_keys($body));
-        $propertyValues = $entity->getPropertyValues();
-
         $fields = [];
 
-        /** @var DeclaredProperty $declaredProperty */
+        $declaredProperties = $this->getType()->getDeclaredProperties();
+
         foreach ($declaredProperties as $declaredProperty) {
+            if (!$propertyValues->exists($declaredProperty)) {
+                continue;
+            }
+
             $fields[] = $this->getPropertySourceName($declaredProperty);
-            $this->addParameter($propertyValues->get($declaredProperty->getName())->getValue()->get());
+            $this->addParameter($propertyValues[$declaredProperty->getName()]->getPrimitiveValue());
         }
 
         if ($this->navigationPropertyValue) {
@@ -407,11 +405,15 @@ class SQLEntitySet extends EntitySet implements CountInterface, CreateInterface,
         $query = sprintf('INSERT INTO %s (%s) VALUES (%s)', $this->getTable(), $fieldsList, $valuesList);
         $id = $this->pdoModify($query);
 
-        if (!$entity->getEntityId() && $id) {
-            $entity->setEntityId($id);
+        $entityId = $propertyValues[$this->getType()->getKey()] ?? null;
+
+        if (!$entityId) {
+            $entityId = new PropertyValue();
+            $entityId->setProperty($this->getType()->getKey());
+            $entityId->setValue($this->getType()->getKey()->getType()->instance($id));
         }
 
-        $entity = $this->read($entity->getEntityId());
+        $entity = $this->read($entityId);
 
         $this->transaction->processDeltaPayloads($entity);
 
