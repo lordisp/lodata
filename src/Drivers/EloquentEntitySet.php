@@ -161,7 +161,7 @@ class EloquentEntitySet extends EntitySet implements CountInterface, CreateInter
             $propertyValue = $entity->newPropertyValue();
             $propertyValue->setProperty($property);
             $propertyValue->setValue($property->getType()->instance($model->{$property->getName()}));
-            $entity->addProperty($propertyValue);
+            $entity->addPropertyValue($propertyValue);
         }
 
         $entity->setEntityId($model->getKey());
@@ -318,7 +318,7 @@ class EloquentEntitySet extends EntitySet implements CountInterface, CreateInter
             $propertyValue = $entity->newPropertyValue();
             $propertyValue->setProperty($property);
             $propertyValue->setValue($property->getType()->instance($model->{$property->getName()}));
-            $entity->addProperty($propertyValue);
+            $entity->addPropertyValue($propertyValue);
         }
 
         $entity->setEntityId($model->getKey());

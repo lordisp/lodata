@@ -120,7 +120,7 @@ class ComplexValue implements ArrayAccess, ArgumentInterface, Arrayable, JsonInt
      * @param  PropertyValue  $propertyValue  Property value
      * @return $this
      */
-    public function addProperty(PropertyValue $propertyValue): self
+    public function addPropertyValue(PropertyValue $propertyValue): self
     {
         $propertyValue->setParent($this);
         $this->propertyValues[] = $propertyValue;
@@ -183,7 +183,7 @@ class ComplexValue implements ArrayAccess, ArgumentInterface, Arrayable, JsonInt
             $propertyValue->setValue($property->getType()->instance($value));
         }
 
-        $this->addProperty($propertyValue);
+        $this->addPropertyValue($propertyValue);
     }
 
     /**
@@ -369,9 +369,6 @@ class ComplexValue implements ArrayAccess, ArgumentInterface, Arrayable, JsonInt
         switch (true) {
             case is_array($object):
                 return $this->fromArray($object);
-
-            case is_object($object):
-                return $this->fromObject($object);
         }
 
         throw new InternalServerErrorException(

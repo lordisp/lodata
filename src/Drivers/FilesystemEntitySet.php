@@ -157,7 +157,7 @@ class FilesystemEntitySet extends EntitySet implements ReadInterface, CreateInte
         $path = $entity->getEntityId()->getPrimitiveValue();
 
         $contentProperty = $this->getType()->getProperty('content');
-        $entity->addProperty(
+        $entity->addPropertyValue(
             $entity->newPropertyValue()->setProperty($contentProperty)->setValue(
                 $contentProperty->getType()->instance()
                     ->set($disk->readStream($path))
