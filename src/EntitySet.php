@@ -311,7 +311,9 @@ abstract class EntitySet implements EntityTypeInterface, ReferenceInterface, Ide
 
                 $propertyValues = $this->arrayToPropertyValues($this->transaction->getBody());
 
-                $result = $this->create($propertyValues);
+                $entity = $this->create($propertyValues);
+
+                $transaction->processDeltaPayloads($entity);
 
                 if (
                     $transaction->getPreferenceValue(Constants::return) === Constants::minimal &&
@@ -320,12 +322,12 @@ abstract class EntitySet implements EntityTypeInterface, ReferenceInterface, Ide
                 ) {
                     throw NoContentException::factory()
                         ->header(Constants::preferenceApplied, Constants::return.'='.Constants::minimal)
-                        ->header(Constants::odataEntityId, $result->getResourceUrl($transaction));
+                        ->header(Constants::odataEntityId, $entity->getResourceUrl($transaction));
                 }
 
-                $transaction->getResponse()->headers->add(['Location' => $result->getResourceUrl($transaction)]);
+                $transaction->getResponse()->headers->add(['Location' => $entity->getResourceUrl($transaction)]);
 
-                return $result->get($transaction, $context);
+                return $entity->get($transaction, $context);
         }
 
         throw new MethodNotAllowedException();
@@ -798,7 +800,7 @@ abstract class EntitySet implements EntityTypeInterface, ReferenceInterface, Ide
 
         Gate::check(Gate::update, $entity, $transaction);
 
-        return $this->update($entity->getEntityId());
+        return $this->update($entity->getEntityId(), $this->arrayToPropertyValues($transaction->getBody()));
     }
 
     /**

@@ -414,35 +414,25 @@ class SQLEntitySet extends EntitySet implements CountInterface, CreateInterface,
             $entityId->setValue($this->getType()->getKey()->getType()->instance($id));
         }
 
-        $entity = $this->read($entityId);
-
-        $this->transaction->processDeltaPayloads($entity);
-
-        return $entity;
+        return $this->read($entityId);
     }
 
     /**
      * Update an existing record
      * @param  PropertyValue  $key  Key
+     * @param  PropertyValues  $propertyValues Property values
      * @return Entity Entity
      */
-    public function update(PropertyValue $key): Entity
+    public function update(PropertyValue $key, PropertyValues $propertyValues): Entity
     {
         $this->resetParameters();
-        $entity = $this->newEntity();
-        $entity->fromArray($this->transaction->getBody());
-
-        $type = $this->getType();
-        $properties = $type->getDeclaredProperties()->pick($entity->getPropertyValues()->keys());
-
-        $primitives = $entity->getPropertyValues();
 
         $fields = [];
 
         /** @var Property $property */
-        foreach ($properties as $property) {
-            $fields[] = sprintf('%s=?', $this->getPropertySourceName($property));
-            $this->addParameter($primitives->get($property->getName())->getValue()->get());
+        foreach ($propertyValues->getDeclaredPropertyValues() as $propertyValue) {
+            $fields[] = sprintf('%s=?', $this->getPropertySourceName($propertyValue->getProperty()));
+            $this->addParameter($propertyValue->getPrimitiveValue());
         }
 
         if ($this->navigationPropertyValue) {
@@ -466,17 +456,13 @@ class SQLEntitySet extends EntitySet implements CountInterface, CreateInterface,
                 'UPDATE %s SET %s WHERE %s=?',
                 $this->getTable(),
                 $fields,
-                $this->propertyToField($type->getKey())
+                $this->propertyToField($this->getType()->getKey())
             );
 
             $this->pdoModify($query);
         }
 
-        $entity = $this->read($key);
-
-        $this->transaction->processDeltaPayloads($entity);
-
-        return $entity;
+        return $this->read($key);
     }
 
     /**

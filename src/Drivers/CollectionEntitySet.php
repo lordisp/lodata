@@ -77,13 +77,17 @@ class CollectionEntitySet extends EnumerableEntitySet implements CreateInterface
     /**
      * Update an entity
      * @param  PropertyValue  $key
+     * @param  PropertyValues  $propertyValues
      * @return Entity
      */
-    public function update(PropertyValue $key): Entity
+    public function update(PropertyValue $key, PropertyValues $propertyValues): Entity
     {
         $entity = $this->read($key);
-        $body = $this->transaction->getBody();
-        $entity->fromSource($body);
+
+        foreach ($propertyValues as $propertyValue) {
+            $entity->addPropertyValue($propertyValue);
+        }
+
         $item = $entity->toArray();
         unset($item['id']);
 

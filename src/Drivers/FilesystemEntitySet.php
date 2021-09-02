@@ -116,9 +116,10 @@ class FilesystemEntitySet extends EntitySet implements ReadInterface, CreateInte
     /**
      * Update a filesystem entity
      * @param  PropertyValue  $key  Entity ID
+     * @param  PropertyValues  $propertyValues Property values
      * @return Entity Entity
      */
-    public function update(PropertyValue $key): Entity
+    public function update(PropertyValue $key, PropertyValues $propertyValues): Entity
     {
         $entity = $this->read($key);
         $body = $this->transaction->getBody();

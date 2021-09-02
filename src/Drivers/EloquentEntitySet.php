@@ -172,20 +172,15 @@ class EloquentEntitySet extends EntitySet implements CountInterface, CreateInter
     /**
      * Update an Eloquent model
      * @param  PropertyValue  $key  Model key
+     * @param  PropertyValues  $propertyValues  Property values
      * @return Entity Entity
      */
-    public function update(PropertyValue $key): Entity
+    public function update(PropertyValue $key, PropertyValues $propertyValues): Entity
     {
         $model = $this->getModelByKey($key);
 
-        $body = $this->transaction->getBody();
-        $entity = $this->newEntity()->fromArray($body);
-
-        /** @var Property $property */
-        foreach ($this->getType()->getDeclaredProperties() as $property) {
-            if (array_key_exists($property->getName(), $body)) {
-                $model[$property->getName()] = $entity->getPropertyValue($property)->get();
-            }
+        foreach ($propertyValues->getDeclaredPropertyValues() as $propertyValue) {
+            $model[$propertyValue->getProperty()->getName()] = $propertyValue->getPrimitiveValue();
         }
 
         $model->save();
@@ -232,8 +227,6 @@ class EloquentEntitySet extends EntitySet implements CountInterface, CreateInter
         $key->setValue($key->getProperty()->getType()->instance($model->id));
         $entity = $this->read($key);
         $key->setParent($entity);
-
-        $this->transaction->processDeltaPayloads($entity);
 
         return $entity;
     }
@@ -298,7 +291,7 @@ class EloquentEntitySet extends EntitySet implements CountInterface, CreateInter
             $builder->skip($this->getSkip()->getValue());
         }
 
-        foreach ($builder->getModels() as $model) {
+        foreach ($builder->lazy() as $model) {
             yield $this->modelToEntity($model);
         }
     }

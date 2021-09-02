@@ -138,14 +138,15 @@ class RedisEntitySet extends EntitySet implements CreateInterface, UpdateInterfa
     /**
      * Update a record in the database
      * @param  PropertyValue  $key  Key
+     * @param  PropertyValues  $propertyValues Property values
      * @return Entity Entity
      */
-    public function update(PropertyValue $key): Entity
+    public function update(PropertyValue $key, PropertyValues $propertyValues): Entity
     {
         $entity = $this->read($key);
 
-        foreach ($this->transaction->getBody() as $property => $value) {
-            $entity[$property] = $value;
+        foreach ($propertyValues as $propertyValue) {
+            $entity->addPropertyValue($propertyValue);
         }
 
         $this->getConnection()->set($entity->getEntityId()->getPrimitiveValue(), $this->serialize($entity));

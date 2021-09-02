@@ -250,7 +250,9 @@ class Entity extends ComplexValue implements ResourceInterface, ResponseInterfac
         $transaction->assertContentTypeJson();
         $transaction->assertIfMatchHeader($this->getETag());
 
-        $entity = $entitySet->update($this->getEntityId());
+        $entity = $entitySet->update($this->getEntityId(), $entitySet->arrayToPropertyValues($transaction->getBody()));
+
+        $transaction->processDeltaPayloads($entity);
 
         if (
             $transaction->getPreferenceValue(Constants::return) === Constants::minimal &&
